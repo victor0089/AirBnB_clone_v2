@@ -74,58 +74,55 @@ class HBNBCommand(cmd.Cmd):
                 if pline:
                     # check for *args or **kwargs
                     if pline[0] == '{' and pline[-1] == '}'\
-                            and type(eval(pline)) is dict:
-                        _args = pline
-                    else:
-                        _args = pline.replace(',', '')
-                        # _args = _args.replace('\"', '')
-            line = ' '.join([_cmd, _cls, _id, _args])
+and type(eval(pline)) is dict:
+_args = pline
+else:
+_args = pline.replace(',', '')
+# _args = _args.replace('\"', '')
+line = ' '.join([_cmd, _cls, _id, _args])
 
-        except Exception as mess:
-            pass
-        finally:
-            return line
+except Exception as mess:
+pass
+finally:
+return line
 
-    def postcmd(self, stop, line):
-        """Prints if isatty is false"""
-        if not sys.__stdin__.isatty():
-            print('(hbnb) ', end='')
-        return stop
+def postcmd(self, stop, line):
+"""Prints if isatty is false"""
+if not sys.__stdin__.isatty():
+print('(hbnb) ', end='')
+return stop
 
-    def do_quit(self, command):
-        """ Method to exit the HBNB console"""
-        exit()
+def do_quit(self, command):
+""" Method to exit the HBNB console"""
+exit()
+def help_quit(self):
+""" Prints the help documentation for quit  """
+print("Exits the program with formatting\n")
+def do_EOF(self, arg):
+""" Handles EOF to exit program """
+print()
+exit()
 
-    def help_quit(self):
-        """ Prints the help documentation for quit  """
-        print("Exits the program with formatting\n")
+def help_EOF(self):
+""" Prints the help documentation for EOF """
+print("Exits the program without formatting\n")
 
-    def do_EOF(self, arg):
-        """ Handles EOF to exit program """
-        print()
-        exit()
-
-    def help_EOF(self):
-        """ Prints the help documentation for EOF """
-        print("Exits the program without formatting\n")
-
-    def emptyline(self):
-        """ Overrides the emptyline method of CMD """
-        pass
-
-    def do_create(self, args):
-        """ Create an object of any class"""
-        try:
-            if not args:
-                raise SyntaxError()
-            arg_list = args.split(" ")
-            kw = {}
-            for arg in arg_list[1:]:
-                arg_splited = arg.split("=")
-                arg_splited[1] = eval(arg_splited[1])
-                if type(arg_splited[1]) is str:
-                    arg_splited[1] = arg_splited[1].replace("_", " ").replace('"', '\\"')
-                kw[arg_splited[0]] = arg_splited[1]
+def emptyline(self):
+""" Overrides the emptyline method of CMD """
+pass
+def do_create(self, args):
+""" Create an object of any class"""
+try:
+if not args:
+raise SyntaxError()
+arg_list = args.split(" ")
+kw = {}
+for arg in arg_list[1:]:
+arg_splited = arg.split("=")
+arg_splited[1] = eval(arg_splited[1])
+if type(arg_splited[1]) is str:
+arg_splited[1] = arg_splited[1].replace("_", " ").replace('"', '\\"')
+kw[arg_splited[0]] = arg_splited[1]
         except SyntaxError:
             print("** class name missing **")
         except NameError:
