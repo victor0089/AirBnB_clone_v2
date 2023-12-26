@@ -18,6 +18,7 @@ if getenv('HBNB_TYPE_STORAGE') == 'db':
 classes = {"User": User, "State": State, "City": City,
            "Amenity": Amenity, "Place": Place, "Review": Review}
 
+
 class DBStorage:
     """ create tables in environmental"""
     __engine = None
