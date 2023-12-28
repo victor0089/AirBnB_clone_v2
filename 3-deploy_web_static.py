@@ -19,12 +19,15 @@ def do_pack():
     local("mkdir -p versions")
     current_time = datetime.now().strftime("%Y%m%d%H%M%S")
     archive_path = "versions/web_static_{}.tgz".format(current_time)
+
+    # Add custom file (my_index.html) to the archive
+    local("echo '<html><body>This is my custom index page</body></html>' > web_static/my_index.html")
+
     result = local("tar -cvzf {} web_static".format(archive_path))
 
     if result.failed:
         return None
     return archive_path
-
 
 def do_deploy(archive_path):
     """
@@ -69,7 +72,6 @@ def do_deploy(archive_path):
         print(e)
         return False
 
-
 def deploy():
     """
     Deploys the archive to the web servers
@@ -77,6 +79,10 @@ def deploy():
 
     archive_path = do_pack()
 
+    if archive_path is None:
+        return False
+
+    return do_deploy(archive_path)
     if archive_path is None:
         return False
 
