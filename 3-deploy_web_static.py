@@ -1,15 +1,14 @@
 #!/usr/bin/python3
 """
-Fabric script (based on the file 2-do_deploy_web_static.py) that creates
-and distributes an archive to your web servers, using the function deploy
+Fabric script to deploy a web_static archive locally
 """
 
 from datetime import datetime
-from fabric.api import env, local, put, run
+from fabric.api import local, run, put
 import os
 
+# Set local host for testing
 env.hosts = ['localhost']
-
 
 def do_pack():
     """
@@ -20,14 +19,9 @@ def do_pack():
     current_time = datetime.now().strftime("%Y%m%d%H%M%S")
     archive_path = "versions/web_static_{}.tgz".format(current_time)
 
-    # Add custom file (my_index.html) to the archive
-    local("echo '<html><body>This is my custom index page</body></html>'> web_static/my_index.html")
-
     # Create or copy required files to web_static directory
-    local("echo '<html><body>Content of 0-index.html
-    </body></html>' > web_static/0-index.html")
-    local("echo '<html><body>This is my custom index page</body></html>'> web_static/my_index.html")
-    result = local("tar -cvzf {} web_static".format(archive_path))
+    local("echo '<html><body>Content of 0-index.html</body></html>' > web_static/0-index.html")
+    local("echo '<html><body>This is my custom index page</body></html>' > web_static/my_index.html")
 
     # Create the archive
     result = local("tar -cvzf {} web_static".format(archive_path))
@@ -36,45 +30,38 @@ def do_pack():
         return None
     return archive_path
 
-    if result.failed:
-        return None
-    return archive_path
-
-
 def do_deploy(archive_path):
     """
-    Distributes an archive to your web servers
+    Deploys an archive locally
     """
 
     if not os.path.exists(archive_path):
         return False
 
     try:
-        # Upload the archive
-        put(archive_path, "/tmp/")
-
         # Create the release directory
-        release_dir = "/data/web_static/releases/{}".format(
+        release_dir = "data/web_static/releases/{}".format(
             os.path.basename(archive_path).replace(".tgz", "")
         )
-        run("mkdir -p {}".format(release_dir))
+
+        local("mkdir -p {}".format(release_dir))
 
         # Unpack the archive
-        run("tar -xzf /tmp/{} -C {}/".format(
-            os.path.basename(archive_path), release_dir
+        local("tar -xzf {} -C {}/".format(
+            archive_path, release_dir
         ))
 
         # Move contents to proper location
-        run("mv {}/web_static/* {}/".format(release_dir, release_dir))
+        local("mv {}/web_static/* {}/".format(release_dir, release_dir))
 
         # Remove unnecessary directory
-        run("rm -rf {}/web_static".format(release_dir))
+        local("rm -rf {}/web_static".format(release_dir))
 
         # Delete the symbolic link
-        run("rm -rf /data/web_static/current")
+        local("rm -rf data/web_static/current")
 
         # Create a new symbolic link
-        run("ln -s {} /data/web_static/current".format(release_dir))
+        local("ln -s {} data/web_static/current".format(release_dir))
 
         print("New version deployed!")
 
@@ -84,10 +71,9 @@ def do_deploy(archive_path):
         print(e)
         return False
 
-
 def deploy():
     """
-    Deploys the archive to the web servers
+    Deploys the archive locally
     """
 
     archive_path = do_pack()
@@ -96,7 +82,6 @@ def deploy():
         return False
 
     return do_deploy(archive_path)
-    if archive_path is None:
-        return False
 
-    return do_deploy(archive_path)
+if __name__ == "__main__":
+    deploy()
