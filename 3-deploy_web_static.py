@@ -4,10 +4,10 @@ Fabric script to deploy a web_static archive locally
 """
 
 from datetime import datetime
-from fabric.api import local, run, put
+from fabric.api import env, local, run, put
 import os
 
-# Set local host for testing
+# Define the env variable
 env.hosts = ['localhost']
 
 def do_pack():
@@ -51,7 +51,7 @@ def do_deploy(archive_path):
             archive_path, release_dir
         ))
 
-        # Move contents to proper location
+        # Move contents to the proper location
         local("mv {}/web_static/* {}/".format(release_dir, release_dir))
 
         # Remove unnecessary directory
