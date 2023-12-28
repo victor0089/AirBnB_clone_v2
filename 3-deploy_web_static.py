@@ -8,7 +8,7 @@ from datetime import datetime
 from fabric.api import env, local, put, run
 import os
 
-env.hosts = ["54.144.152.30", "35.174.176.12"]
+env.hosts = ['localhost']
 
 
 def do_pack():
@@ -21,15 +21,12 @@ def do_pack():
     archive_path = "versions/web_static_{}.tgz".format(current_time)
 
     # Add custom file (my_index.html) to the archive
-    local("echo '<html><body>This is my custom index page</body></html>'
-    > web_static/my_index.html")
+    local("echo '<html><body>This is my custom index page</body></html>'> web_static/my_index.html")
 
     # Create or copy required files to web_static directory
-    local("echo '<html><body>Content of 0-index.html</body></html>' 
-    > web_static/0-index.html")
-    local("echo '<html><body>This is my custom index page</body></html>' 
-    > web_static/my_index.html")
-
+    local("echo '<html><body>Content of 0-index.html
+    </body></html>' > web_static/0-index.html")
+    local("echo '<html><body>This is my custom index page</body></html>'> web_static/my_index.html")
     result = local("tar -cvzf {} web_static".format(archive_path))
 
     # Create the archive
