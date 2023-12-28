@@ -21,15 +21,17 @@ def do_pack():
     archive_path = "versions/web_static_{}.tgz".format(current_time)
 
     # Add custom file (my_index.html) to the archive
-    local("echo '<html><body>This is my custom index page</body></html>' > web_static/my_index.html")
-    
+    local("echo '<html><body>This is my custom index page</body></html>'
+    > web_static/my_index.html")
+
     # Create or copy required files to web_static directory
-    local("echo '<html><body>Content of 0-index.html</body></html>' > web_static/0-index.html")
-    local("echo '<html><body>This is my custom index page</body></html>' > web_static/my_index.html")
-    
+    local("echo '<html><body>Content of 0-index.html</body></html>' 
+    > web_static/0-index.html")
+    local("echo '<html><body>This is my custom index page</body></html>' 
+    > web_static/my_index.html")
+
     result = local("tar -cvzf {} web_static".format(archive_path))
 
-    
     # Create the archive
     result = local("tar -cvzf {} web_static".format(archive_path))
 
@@ -40,6 +42,7 @@ def do_pack():
     if result.failed:
         return None
     return archive_path
+
 
 def do_deploy(archive_path):
     """
@@ -83,6 +86,7 @@ def do_deploy(archive_path):
     except Exception as e:
         print(e)
         return False
+
 
 def deploy():
     """
