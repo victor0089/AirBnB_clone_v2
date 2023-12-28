@@ -22,8 +22,20 @@ def do_pack():
 
     # Add custom file (my_index.html) to the archive
     local("echo '<html><body>This is my custom index page</body></html>' > web_static/my_index.html")
-
+    
+    # Create or copy required files to web_static directory
+    local("echo '<html><body>Content of 0-index.html</body></html>' > web_static/0-index.html")
+    local("echo '<html><body>This is my custom index page</body></html>' > web_static/my_index.html")
+    
     result = local("tar -cvzf {} web_static".format(archive_path))
+
+    
+    # Create the archive
+    result = local("tar -cvzf {} web_static".format(archive_path))
+
+    if result.failed:
+        return None
+    return archive_path
 
     if result.failed:
         return None
