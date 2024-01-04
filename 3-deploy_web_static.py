@@ -27,6 +27,7 @@ def do_pack():
     except Exception as e:
         return None
 
+
 def do_deploy(archive_path):
     """
     Deploy the archive to the web servers
