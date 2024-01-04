@@ -10,6 +10,8 @@ from datetime import datetime
 from os.path import exists, isdir
 
 env.hosts = ['54.144.152.30', '35.174.176.12']
+env.user = 'ubuntu'  # Replace with your SSH username
+env.key_filename = '~/.ssh/school'  # Replace with the path to your private key
 
 
 def do_pack():
