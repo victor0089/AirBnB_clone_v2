@@ -27,7 +27,6 @@ def do_pack():
     except Exception as e:
         return None
 
-
 def do_deploy(archive_path):
     """
     Deploy the archive to the web servers
@@ -66,10 +65,7 @@ def deploy():
     Full deployment process
     """
     archive_path = do_pack()
-    if not archive_path:
-        return False
-
-    return do_deploy(archive_path)
+    return archive_path and do_deploy(archive_path)
 
 
 if __name__ == "__main__":
